@@ -7,6 +7,13 @@
 - [x] 支持多工作者同时迁移
 - [x] 跨平台
 
+### 下载
+```bash
+wget https://github.com/DGHeroin/RedisTransfer/releases/latest/download/RedisTransfer-linux-amd64 -O RedisTransfer
+
+chmod +x RedisTransfer
+```
+
 ## 教程
 > 单点到单点
 
