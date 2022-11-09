@@ -44,11 +44,12 @@ func checkTTL(key string) {
     if err != nil {
         return
     }
-    if ttl != -1 {
-        err = targetClient.Expire(context.Background(), key, ttl).Err()
-        if err != nil {
-            return
-        }
+    if ttl == -1 {
+        return
+    }
+    err = targetClient.Expire(context.Background(), key, ttl).Err()
+    if err != nil {
+        return
     }
     atomic.AddUint32(&countTTL, 1)
 }
