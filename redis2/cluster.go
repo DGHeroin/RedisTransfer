@@ -25,6 +25,6 @@ func NewRedisCluster(addr []string, password string) (ClientX, error) {
     if err != nil {
         return nil, err
     }
-    cli = &cluster{}
+    cli = &cluster{client}
     return cli, nil
 }

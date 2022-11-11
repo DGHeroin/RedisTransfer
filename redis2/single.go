@@ -2,7 +2,6 @@ package redis2
 
 import (
     "context"
-    "errors"
     "github.com/go-redis/redis/v8"
 )
 
@@ -11,15 +10,15 @@ type single struct {
 }
 
 func (s *single) ForEachShard(ctx context.Context, fn func(ctx context.Context, client *redis.Client) error) error {
-    return errors.New("ForEachShard not impl")
+    return fn(ctx, s.Client)
 }
 
 func (s *single) ForEachMaster(ctx context.Context, fn func(ctx context.Context, client *redis.Client) error) error {
-    return errors.New("ForEachMaster not impl")
+    return fn(ctx, s.Client)
 }
 
 func (s *single) ForEachSlave(ctx context.Context, fn func(ctx context.Context, client *redis.Client) error) error {
-    return errors.New("ForEachSlave not impl")
+    return fn(ctx, s.Client)
 }
 
 func NewRedisSingle(addr string, password string) (ClientX, error) {
