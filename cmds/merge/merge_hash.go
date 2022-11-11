@@ -9,9 +9,10 @@ import (
 
 func HandleHash(key string) error {
     t0 := time.Now()
+    var sz int64
     defer func() {
         elapsedTime := time.Since(t0)
-        logd("[hash] 成功 %v %s\n", elapsedTime, key)
+        logd("[hash] %d 成功 %v 大小:%v [%s]\n", atomic.LoadUint32(&count), elapsedTime, sz, key)
     }()
 
     kv, err := sourceClient.HGetAll(context.Background(), key).Result()
@@ -27,6 +28,10 @@ func HandleHash(key string) error {
     if err != nil {
         log.Println(err)
         return err
+    }
+
+    if val, err := targetClient.HLen(context.Background(), key).Result(); err == nil {
+        sz = val
     }
 
     atomic.AddUint32(&countHash, 1)

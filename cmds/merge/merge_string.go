@@ -8,9 +8,10 @@ import (
 
 func HandleString(key string) error {
     t0 := time.Now()
+    var sz int64
     defer func() {
         elapsedTime := time.Since(t0)
-        logd("[string] 成功 %v %s\n", elapsedTime, key)
+        logd("[string] %d 成功 %v 大小:%v [%s]\n", atomic.LoadUint32(&count), elapsedTime, sz, key)
     }()
 
     str, err := sourceClient.Get(context.Background(), key).Result()
@@ -22,6 +23,7 @@ func HandleString(key string) error {
     if err != nil {
         return err
     }
+    sz = int64(len(str))
 
     atomic.AddUint32(&countString, 1)
     return nil

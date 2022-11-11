@@ -17,6 +17,7 @@ var (
     sourceDB      int
     targetDB      int
     verbose       bool
+    status        bool
     workerNum     int
 )
 var (
@@ -52,6 +53,7 @@ func init() {
     Cmd.PersistentFlags().BoolVar(&sourceCluster, "s-cluster", false, "源redis是否是集群")
     Cmd.PersistentFlags().BoolVar(&targetCluster, "t-cluster", false, "目标redis是否是集群")
     Cmd.PersistentFlags().BoolVar(&verbose, "verbose", false, "详细日志")
+    Cmd.PersistentFlags().BoolVar(&verbose, "status", false, "实时数据")
     Cmd.PersistentFlags().IntVar(&workerNum, "worker", 100, "工作者数量")
 
     Cmd.AddCommand(mergeAllCmd, mergeStringCmd, mergeHashCmd, mergeSetCmd, mergeZSetgCmd, mergeListCmd)

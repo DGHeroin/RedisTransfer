@@ -8,9 +8,10 @@ import (
 
 func HandleSet(key string) error {
     t0 := time.Now()
+    var sz int64
     defer func() {
         elapsedTime := time.Since(t0)
-        logd("[set] 成功 %v %s\n", elapsedTime, key)
+        logd("[set] %d 成功 %v 大小:%v [%s]\n", atomic.LoadUint32(&count), elapsedTime, sz, key)
     }()
 
     result, err := sourceClient.SMembers(context.Background(), key).Result()
@@ -25,6 +26,11 @@ func HandleSet(key string) error {
     if err != nil {
         return err
     }
+
+    if val, err := targetClient.SCard(context.Background(), key).Result(); err == nil {
+        sz = val
+    }
+
     atomic.AddUint32(&countSet, 1)
     return nil
 }

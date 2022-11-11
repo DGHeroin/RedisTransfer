@@ -2,16 +2,16 @@ package redis2
 
 import (
     "context"
-    "github.com/go-redis/redis/v8"
+    . "github.com/go-redis/redis/v8"
 )
 
 type cluster struct {
-    *redis.ClusterClient
+    *ClusterClient
 }
 
 func NewRedisCluster(addr []string, password string) (ClientX, error) {
     var cli *cluster
-    client := redis.NewClusterClient(&redis.ClusterOptions{
+    client := NewClusterClient(&ClusterOptions{
         Addrs:        addr,
         Password:     password,
         ReadTimeout:  -1,
@@ -19,7 +19,7 @@ func NewRedisCluster(addr []string, password string) (ClientX, error) {
         PoolSize:     5000,
         PoolTimeout:  -1,
     })
-    err := client.ForEachShard(context.Background(), func(ctx context.Context, shard *redis.Client) error {
+    err := client.ForEachShard(context.Background(), func(ctx context.Context, shard *Client) error {
         return shard.Ping(ctx).Err()
     })
     if err != nil {

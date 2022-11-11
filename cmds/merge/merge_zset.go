@@ -9,9 +9,10 @@ import (
 
 func HandleZSet(key string) error {
     t0 := time.Now()
+    var sz int64
     defer func() {
         elapsedTime := time.Since(t0)
-        logd("[zset] 成功 %v %s\n", elapsedTime, key)
+        logd("[zset] %d 成功 %v 大小:%v [%s] \n", atomic.LoadUint32(&count), elapsedTime, sz, key)
     }()
 
     result, err := sourceClient.ZRangeWithScores(context.Background(), key, 0, -1).Result()
@@ -20,12 +21,19 @@ func HandleZSet(key string) error {
     }
     var args []*redis.Z
     for _, s := range result {
-        args = append(args, &s)
+        args = append(args, &redis.Z{
+            Score:  s.Score,
+            Member: s.Member,
+        })
     }
     err = targetClient.ZAdd(context.Background(), key, args...).Err()
     if err != nil {
         return err
     }
+    if val, err := targetClient.ZCard(context.Background(), key).Result(); err == nil {
+        sz = val
+    }
+
     atomic.AddUint32(&countZSet, 1)
     return nil
 }
