@@ -27,7 +27,7 @@ func HandleString(key string) error {
     info.Type = "string"
     info.String = str
     info.TTL = checkTTL(key)
-    atomic.AddUint32(&countString, 1)
+
     return writeData(&info)
 }
 func HandleHash(key string) error {
@@ -48,7 +48,7 @@ func HandleHash(key string) error {
     info.Type = "hash"
     info.Hash = str
     info.TTL = checkTTL(key)
-    atomic.AddUint32(&countHash, 1)
+
     return writeData(&info)
 }
 func HandleSet(key string) error {
@@ -69,7 +69,7 @@ func HandleSet(key string) error {
     info.Type = "set"
     info.Set = str
     info.TTL = checkTTL(key)
-    atomic.AddUint32(&countSet, 1)
+
     return writeData(&info)
 }
 func HandleZSet(key string) error {
@@ -96,7 +96,7 @@ func HandleZSet(key string) error {
             Member string  `json:"member"`
         }{Score: v.Score, Member: fmt.Sprintf("%s", v.Member)})
     }
-    atomic.AddUint32(&countZSet, 1)
+
     return writeData(&info)
 }
 func HandleList(key string) error {
@@ -117,7 +117,7 @@ func HandleList(key string) error {
     info.Type = "list"
     info.List = str
     info.TTL = checkTTL(key)
-    atomic.AddUint32(&countList, 1)
+
     return writeData(&info)
 }
 func checkTTL(key string) int64 {

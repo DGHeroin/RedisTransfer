@@ -96,14 +96,29 @@ func handleKey(key string, wg *sync.WaitGroup) {
     switch t {
     case "string":
         err = HandleString(key)
+        if err == nil {
+            atomic.AddUint32(&countString, 1)
+        }
     case "hash":
         err = HandleHash(key)
+        if err == nil {
+            atomic.AddUint32(&countHash, 1)
+        }
     case "set":
         err = HandleSet(key)
+        if err == nil {
+            atomic.AddUint32(&countSet, 1)
+        }
     case "zset":
         err = HandleZSet(key)
+        if err == nil {
+            atomic.AddUint32(&countZSet, 1)
+        }
     case "list":
         err = HandleList(key)
+        if err == nil {
+            atomic.AddUint32(&countList, 1)
+        }
     }
     if err != nil {
         log.E("fail:%s %v\n", key, err)

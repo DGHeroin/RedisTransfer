@@ -95,14 +95,29 @@ func handleKey(info *types.DataBase, wg *sync.WaitGroup) {
     switch info.Type {
     case "string":
         err = HandleString(info)
+        if err == nil {
+            atomic.AddUint32(&countString, 1)
+        }
     case "hash":
         err = HandleHash(info)
+        if err == nil {
+            atomic.AddUint32(&countHash, 1)
+        }
     case "set":
         err = HandleSet(info)
+        if err == nil {
+            atomic.AddUint32(&countSet, 1)
+        }
     case "zset":
         err = HandleZSet(info)
+        if err == nil {
+            atomic.AddUint32(&countZSet, 1)
+        }
     case "list":
         err = HandleList(info)
+        if err == nil {
+            atomic.AddUint32(&countList, 1)
+        }
     }
     if err != nil {
         log.E("fail:%s %v\n", info, err)
