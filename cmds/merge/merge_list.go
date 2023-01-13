@@ -1,6 +1,7 @@
 package merge
 
 import (
+    "RedisTransfer/log"
     "context"
     "sync/atomic"
     "time"
@@ -11,7 +12,7 @@ func HandleList(key string) error {
     var sz int64
     defer func() {
         elapsedTime := time.Since(t0)
-        logd("[list] %d 成功 %v 大小:%v [%s]\n", atomic.LoadUint32(&count), elapsedTime, sz, key)
+        log.D("[list] %d 成功 %v 大小:%v [%s]\n", atomic.LoadUint32(&count), elapsedTime, sz, key)
     }()
 
     result, err := sourceClient.LRange(context.Background(), key, 0, -1).Result()

@@ -1,10 +1,10 @@
 package merge
 
 import (
+    "RedisTransfer/log"
     "RedisTransfer/redis2"
     "github.com/spf13/cobra"
     "sync"
-    "time"
 )
 
 var (
@@ -16,7 +16,6 @@ var (
     targetCluster bool
     sourceDB      int
     targetDB      int
-    verbose       bool
     status        bool
     workerNum     int
 )
@@ -34,7 +33,6 @@ var (
     countTTL    uint32
     mu          sync.Mutex
     mm          = map[string]bool{}
-    uptime      = time.Now()
 )
 var (
     Cmd = &cobra.Command{
@@ -52,8 +50,8 @@ func init() {
     Cmd.PersistentFlags().StringVar(&targetAuth, "t-auth", "", "目标密码")
     Cmd.PersistentFlags().BoolVar(&sourceCluster, "s-cluster", false, "源redis是否是集群")
     Cmd.PersistentFlags().BoolVar(&targetCluster, "t-cluster", false, "目标redis是否是集群")
-    Cmd.PersistentFlags().BoolVar(&verbose, "verbose", false, "详细日志")
-    Cmd.PersistentFlags().BoolVar(&verbose, "status", false, "实时数据")
+    Cmd.PersistentFlags().BoolVar(&log.Verbose, "verbose", false, "详细日志")
+    Cmd.PersistentFlags().BoolVar(&status, "status", false, "实时数据")
     Cmd.PersistentFlags().IntVar(&workerNum, "worker", 100, "工作者数量")
 
     Cmd.AddCommand(mergeAllCmd, mergeStringCmd, mergeHashCmd, mergeSetCmd, mergeZSetgCmd, mergeListCmd)

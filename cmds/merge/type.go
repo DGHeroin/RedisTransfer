@@ -1,6 +1,7 @@
 package merge
 
 import (
+    "RedisTransfer/log"
     "RedisTransfer/redis2"
     "context"
     "github.com/go-redis/redis/v8"
@@ -57,7 +58,7 @@ func connectToRedis() (err error) {
         if err != nil {
             return err
         }
-        logi("[初始化源] %v %v\n", sourceAddr, redisType)
+        log.I("[初始化源] %v %v\n", sourceAddr, redisType)
     }
     // 目标
     {
@@ -69,7 +70,7 @@ func connectToRedis() (err error) {
         if err != nil {
             return err
         }
-        logi("[初始化目标] %v %v\n", targetAddr, redisType)
+        log.I("[初始化目标] %v %v\n", targetAddr, redisType)
     }
     return nil
 }

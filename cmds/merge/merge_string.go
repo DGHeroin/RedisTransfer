@@ -1,6 +1,7 @@
 package merge
 
 import (
+    "RedisTransfer/log"
     "context"
     "sync/atomic"
     "time"
@@ -11,7 +12,7 @@ func HandleString(key string) error {
     var sz int64
     defer func() {
         elapsedTime := time.Since(t0)
-        logd("[string] %d 成功 %v 大小:%v [%s]\n", atomic.LoadUint32(&count), elapsedTime, sz, key)
+        log.D("[string] %d 成功 %v 大小:%v [%s]\n", atomic.LoadUint32(&count), elapsedTime, sz, key)
     }()
 
     str, err := sourceClient.Get(context.Background(), key).Result()

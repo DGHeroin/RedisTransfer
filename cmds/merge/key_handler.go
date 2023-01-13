@@ -1,6 +1,7 @@
 package merge
 
 import (
+    "RedisTransfer/log"
     "context"
     "sync"
     "sync/atomic"
@@ -17,7 +18,7 @@ func handleKey(key string, wg *sync.WaitGroup) {
     mu.Unlock()
     t, err := sourceClient.Type(context.Background(), key).Result()
     if err != nil {
-        loge("fail:%s\n", key)
+        log.E("fail:%s\n", key)
         return
     }
     switch t {
@@ -33,7 +34,7 @@ func handleKey(key string, wg *sync.WaitGroup) {
         err = HandleList(key)
     }
     if err != nil {
-        loge("fail:%s\n", key)
+        log.E("fail:%s\n", key)
         return
     }
     checkTTL(key)
@@ -61,21 +62,21 @@ func keyHandler(ch chan string, wg *sync.WaitGroup) {
 func handleMerge(match, keyType string) error {
     defer func() {
         if err := sourceClient.Close(); err != nil {
-            loge("[关闭源 redis] 错误:%v\n", err)
+            log.E("[关闭源 redis] 错误:%v\n", err)
         }
         if err := targetClient.Close(); err != nil {
-            loge("[关闭目的 redis] 错误:%v\n", err)
+            log.E("[关闭目的 redis] 错误:%v\n", err)
         }
     }()
 
     var wg sync.WaitGroup
     ch := make(chan string, 500)
-    logi("[合并] 工作者:[%v] 类型:[%s] match:[%s]\n", workerNum, keyType, match)
+    log.I("[合并] 工作者:[%v] 类型:[%s] match:[%s]\n", workerNum, keyType, match)
     if status {
         go func() { // monitor
             for {
                 time.Sleep(time.Second)
-                logi("[已处理] key数量:%v string:%v hash:%v set:%v zset:%v list:%v ttl keys:%v keys:%v\n",
+                log.I("[已处理] key数量:%v string:%v hash:%v set:%v zset:%v list:%v ttl keys:%v keys:%v\n",
                     atomic.LoadUint32(&count), atomic.LoadUint32(&countString), atomic.LoadUint32(&countHash),
                     atomic.LoadUint32(&countSet), atomic.LoadUint32(&countZSet), atomic.LoadUint32(&countList),
                     atomic.LoadUint32(&countTTL), len(mm),
@@ -98,7 +99,7 @@ func handleMerge(match, keyType string) error {
     close(ch)
 
     wg.Wait()
-    logi("[处理完成] key数量:%v string:%v hash:%v set:%v zset:%v list:%v ttl keys:%v keys:%v\n",
+    log.I("[处理完成] key数量:%v string:%v hash:%v set:%v zset:%v list:%v ttl keys:%v keys:%v\n",
         atomic.LoadUint32(&count), atomic.LoadUint32(&countString), atomic.LoadUint32(&countHash),
         atomic.LoadUint32(&countSet), atomic.LoadUint32(&countZSet), atomic.LoadUint32(&countList),
         atomic.LoadUint32(&countTTL), len(mm),

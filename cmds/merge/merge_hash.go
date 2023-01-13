@@ -1,8 +1,8 @@
 package merge
 
 import (
+    "RedisTransfer/log"
     "context"
-    "log"
     "sync/atomic"
     "time"
 )
@@ -12,7 +12,7 @@ func HandleHash(key string) error {
     var sz int64
     defer func() {
         elapsedTime := time.Since(t0)
-        logd("[hash] %d 成功 %v 大小:%v [%s]\n", atomic.LoadUint32(&count), elapsedTime, sz, key)
+        log.D("[hash] %d 成功 %v 大小:%v [%s]\n", atomic.LoadUint32(&count), elapsedTime, sz, key)
     }()
 
     kv, err := sourceClient.HGetAll(context.Background(), key).Result()
@@ -26,7 +26,6 @@ func HandleHash(key string) error {
     }
     err = targetClient.HSet(context.Background(), key, args...).Err()
     if err != nil {
-        log.Println(err)
         return err
     }
 

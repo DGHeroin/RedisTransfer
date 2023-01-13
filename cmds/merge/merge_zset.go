@@ -1,6 +1,7 @@
 package merge
 
 import (
+    "RedisTransfer/log"
     "context"
     "github.com/go-redis/redis/v8"
     "sync/atomic"
@@ -12,7 +13,7 @@ func HandleZSet(key string) error {
     var sz int64
     defer func() {
         elapsedTime := time.Since(t0)
-        logd("[zset] %d 成功 %v 大小:%v [%s] \n", atomic.LoadUint32(&count), elapsedTime, sz, key)
+        log.D("[zset] %d 成功 %v 大小:%v [%s] \n", atomic.LoadUint32(&count), elapsedTime, sz, key)
     }()
 
     result, err := sourceClient.ZRangeWithScores(context.Background(), key, 0, -1).Result()
